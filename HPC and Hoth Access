@@ -1,18 +1,18 @@
 Create a Hammer or Anvil Individual Account 
-	1.  Go to http://rcc.its.psu.edu/resources/accounts/individual 
-	2.	Fill out the form
-	3.	Indicate that which node you would like to access
-			a.	Hammer: Interactive login cluster designed to run jobs through their graphical interface
-					•	Hammer Website: http://rcc.its.psu.edu/user_guides/systems/hammer/
-					•	IP address: hammer.rcc.psu.edu
-			b.	Anvil: Windows only, interactive node accessed only using Remote Desktop Connection
-					•	Anvil Website: http://rcc.its.psu.edu/user_guides/systems/anvil/
+	1.Go to http://rcc.its.psu.edu/resources/accounts/individual 
+	2.Fill out the form
+	3.Indicate that which node you would like to access
+			a.Hammer: Interactive login cluster designed to run jobs through their graphical interface
+					•Hammer Website: http://rcc.its.psu.edu/user_guides/systems/hammer/
+					•IP address: hammer.rcc.psu.edu
+			b.Anvil: Windows only, interactive node accessed only using Remote Desktop Connection
+					•Anvil Website: http://rcc.its.psu.edu/user_guides/systems/anvil/
 Create a CyberSTAR Individual Account
-	1.	Go to https://www.ics.psu.edu/secure/account.html
-	2.	Fill out the form
-	3.	Check the box that you will be using the SLEIC
-	4.	CyberSTAR Website: http://rcc.its.psu.edu/user_guides/systems/cyberstar/
-	5.	IP address: cyberstar.psu.edu
+	1.Go to https://www.ics.psu.edu/secure/account.html
+	2.Fill out the form
+	3.Check the box that you will be using the SLEIC
+	4.CyberSTAR Website: http://rcc.its.psu.edu/user_guides/systems/cyberstar/
+	5.IP address: cyberstar.psu.edu
 Create Group Space on Hammer, Anvil or Cyberstar
 	1.	Create all individual accounts
 	2.	Send a request to the SLEIC Help Listserv with the following information
