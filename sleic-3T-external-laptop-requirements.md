@@ -5,10 +5,11 @@
 |TMH       |2013-10-16|          |
 
 ## Laptop Setup
-- External video output at 1024x768 @ 60Hz
+- External video output
 	- DVI (Preferred)
-	-  HDMI
-	-  VGA (Via VGA-to-DVI adapter)
+	- HDMI
+	- VGA (Via VGA-to-DVI adapter)
+	- 1024x768 @ 60 Hz is standard output.  However, you may need to retain a 16:9 aspect ratio to prevent unexpected stretching.  Schedule development time to make sure participants can see stimuli appropriately. 
 - Wireless network adapter disabled
 - Wired network adapter set to use DHCP to obtain IP address
 	-  DNS explicitly set to home IT department’s DNS servers (if necessary)
