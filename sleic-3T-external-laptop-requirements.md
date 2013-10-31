@@ -9,7 +9,8 @@
 	- DVI (Preferred)
 	- HDMI
 	- VGA (Via VGA-to-DVI converter box).  The converter box has settings to adjust "Scale", or aspect ratio, which you will need to fit to your laptop's aspect ratio.
-	- 1024x768 @ 60 Hz is standard output.  However, you may need to retain a 16:9 aspect ratio to prevent unexpected stretching depending on your software application (i.e. Psychtoolbox).  Schedule development time to make sure participants can see stimuli appropriately.
+	- 1024x768 @ 60 Hz is standard output.  However, you may need to retain a 16:9 aspect ratio to prevent unexpected stretching depending on your software application (i.e. Psychtoolbox).  
+	- Schedule development time to make sure participants can see stimuli appropriately.
 - Wireless network adapter disabled
 - Wired network adapter set to use DHCP to obtain IP address
 	-  DNS explicitly set to home IT department’s DNS servers (if necessary)
