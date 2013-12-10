@@ -1,0 +1,34 @@
+Prepare:
+
+External Trigger Box
+1. Banana plug (BNC cable) goes in MRI input that is closest to the control room.
+2. Plug the other end of the BNC cable into the top right connector in the wall filter panel through to the control room.
+3. On the other side of the wall, attach the external trigger box to the BNC T-connection (splitter).
+4. Check that the USB plug for power to the external trigger is plugged into the back of the Siemens computer.
+5. Check that the plug in (Fiber Optic) cable from TR Sync Pulse Repeater to external trigger box and the switch is "On".
+
+FMenu
+
+1. On the MRI console computer, open the Start menu, and select Run
+2. Type "cmd" and hit <Enter>
+3. Type "telnet mcpu" and <Enter>
+4. In the prompt, type "fMenu" and <Enter>
+5. Type "4" for "PMU"
+6. Type "3" for "Signal Logging" and leave this screen alone until scan.
+
+Physiological Monitoring
+1. Take both physio units off the charger station.  One will be used for respiratory belt (needs to be attached) and the other will be used for the pulse oximeter.
+2. During initial preparation, place the respiratory belt along the participant's diaphragm.  Check the monitored signal in the control room to make sure the signal is not too saturated.
+3. Place the pulse oximeter on the participant's left middle finger and place the box somewhere so it will not easily be disturbed.  Check the monitored signal in the control room.
+
+
+Scan Procedure:
+1. FMenu: Right before scan starts, enter "9" to start all physiological signal recording.
+2. A prompt will ask what the file name should be labelled as.
+3. Start scan 
+4. FMenu: Right when scan ends, enter "10" to end all physiological signal recording.
+
+
+After scan:
+1. Physio files are exported to C:\MedCom\log\
+
