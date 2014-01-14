@@ -1,0 +1,24 @@
+Please note:
+These instructions are ONLY for the new fORP interface and 8 button box handhelds.  Delivered on 1/14/2014.
+
+Instructions for connecting and starting up:
+
+1) Make sure 8-button box handheld devices are plugged in.  This must occur before the power supply is connected.
+2) Plug in the power supply.
+3) Plug in the mini USB to the USB Hub.  Note: The serial out to USB was not readily working.
+4a) The screen should say:
+
+USB
+HHSC-2x4-C
+HID KEY NO 5
+
+I have already configured these settings.  "HHSC-2x4-C" is the name of the 8 button handhelds.  Joystick will be different.  "HID KEY NO 5"  is the key configuration replicating that of the old fORP device, such that the Left box outputs 1-4 and the Right outputs 6-9.
+
+4b) If you need to configure these settings again follow the next set of instructions.
+
+Instructions for configuring fORP interface:
+
+1) Click the dial knob.
+2) The next screen says "Change Modes".  Scroll to "Yes" and click knob.
+3) Scroll to "AutoConfigure" and click knob.
+4) Scroll down to "HID KEY NO 5" and click knob.
