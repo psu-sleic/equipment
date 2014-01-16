@@ -1,0 +1,20 @@
+Usage: dcm2dir $ARGV[0] $ARGV[1] $ARGV[2] $ARGV[3] $ARGV[4] $ARGV[5]
+
+$DATE_TIME = $ARGV[0]
+$user = $ARGV[1]
+$proj = $ARGV[2]
+$number = $ARGV[3]
+$FLAG = $ARGV[4]
+$FLAG2 = $ARGV[5] (Optional)
+
+Flags: d=dicom(default), a=afni, n=nifti, s=4D files for SPM5/SPM8, t=SPM2
+
+It looks like dcm2dir copies from
+
+/nfs/secrets/dicom/$DATE_TIME/ 
+
+to 
+
+/nfs/secrets/3Tusers/$user/$proj/$number
+
+
