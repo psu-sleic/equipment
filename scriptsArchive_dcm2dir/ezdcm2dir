@@ -1,0 +1,209 @@
+#!/usr/bin/perl
+#
+# all research QA under 200903030800 before July 10 2009
+# all ACR under 0000
+# PERL script to copy dicom images from dicom database
+# to individual PI directories
+# written by Susan K Lemieux July 2009 
+# SLEIC at the Penn State University
+#
+# QA scans go in project stabnii
+# Each numb should be the yyyymmddtttt
+# ex: ./dcm2dir 200907101700 sxl59 pilt02 200907101700
+# for QA ./dcm2dir qatype qa qa yyyymmddtttt q
+# modified Nov. 17 2009 skl and ase to include group permissions
+# modified Dec. 7 2009 skl, ase, gb to set group for subject directory
+# modified April 18, 2011 skl to remove QA flags and accept 2 image types
+# modified May 2, 2011 skl to read user proj number from DICOM header instead of command line
+#
+use Getopt::Std;
+use lib '/nfs/secrets/3Tstaff/DICOMperl';	# Location of DICOMperl modules.
+#use lib '/nfs/users/sxl59/DICOMperl';	# Location of DICOMperl modules.
+use DICOM; 				# Basic class.
+$dicom = DICOM->new(); 			# Creates new DICOM object. Sets up its dictionary.
+$FLAG="d";
+$USAGE =("usage: $0 DATE_TIME(yyyymmddtttt) img_type1 (optional img_type2) (d=dicom(default),a=afni, n=nifti, s=4D files for SPM5/SPM8 t=SPM2 ) \n(Example: 20090511500 a). \n\n\ ");
+if ($#ARGV<0) 
+  {print $USAGE;
+   exit};
+$DATE_TIME=$ARGV[0];
+$FLAG=$ARGV[1];
+$FLAG2=$ARGV[2];
+$dicomdir="/nfs/secrets/dicom/".$DATE_TIME."/";
+$filedir="/nfs/secrets/3Tstaff/dcm2dirfiles/";
+$dicomHdrFile = $dicomdir."*_0001_000001_*";
+$file4hdr = $filedir."dcm2dirfile4hdr";
+system("cp $dicomHdrFile $file4hdr");
+# Get header info from first file in folder 
+$dicom->fill($file4hdr); 		# Reads in and parses the DICOM file.
+#
+$date = $dicom->value('0008','0020');	# DICOM date field
+#$proj="test";
+#$number="0000";
+$pid = $dicom->value('0010','0020');	# DICOM PID field
+$pname = $dicom->value('0010','0010');	# DICOM Patient Name Field
+($user, $projnumber) = split('^',$pname,2);
+$user=substr($pname,0,4);
+$proj=substr($pname,5,4);
+$number=substr($pname,9,4);
+print ("\n");
+print ("\nPID = ", $pid);
+print ("\nIMAGE TYPES = ",$FLAG,$FLAG2); 
+#print ("\nuser = ", $user); 
+#print ("\nDicomFile = ", $file4hdr);
+print ("\nuserid = ", $user);
+print ("\nprojid = ", $proj); 
+print ("\nnumber = ", $number);  
+print ("\ndate = ", $date);
+print ("\n");
+print ("\n");
+#
+$usersdir="/nfs/secrets/3Tusers/";
+$projdir=$usersdir.$user."/".$proj;
+$group=$user."_".$proj;
+if(!-d $projdir)  # if there is !no! directory!
+  {
+  mkdir($projdir, 0775);
+  system "sudo chgrp $group $projdir";
+  system "sudo chmod 770 $projdir";
+  }; 		# make it and for linux CHMOD to 770
+$numdir=$projdir."/".$number;
+if(-d $numdir)  # if there is a proj/number directory already
+  {print ("Ack! The data has already been transferred! \n\n\ ");
+   exit};
+mkdir ($numdir, 0775);
+$dicomdir="/nfs/secrets/dicom/".$DATE_TIME."/";
+$dicomlist = $dicomdir."*_00*_000001_*";
+$seriesfile=$numdir."/series_list";
+# dicom identifiers in file name before scan date= 
+#                   "1.3.12.2.1107.5.2.32.35585."
+system "ls $dicomlist > $seriesfile";
+#  loop over each series
+open (seriesfile) or die ("Could not open series_list file.");
+# create directories for converted data
+if ($FLAG eq "s") 
+  {$spmdir=$numdir."/spm5imgs/";
+  mkdir ($spmdir,0775);}
+if ($FLAG eq "n")
+  {$spmdir=$numdir."/nii/";
+  mkdir ($spmdir,0775);}
+if ($FLAG eq "t")
+  {$spmdir=$numdir."/spm2imgs/";
+  mkdir ($spmdir,0775);}
+if ($FLAG eq "a")
+  {$spmdir=$numdir."/briks/";
+  mkdir ($spmdir,0775);}
+if ($FLAG2 eq "s")
+  {$spmdir2=$numdir."/spm5imgs/";
+  mkdir ($spmdir2,0775);}
+if ($FLAG2 eq "n")
+  {$spmdir2=$numdir."/nii/";
+  mkdir ($spmdir2,0775);}
+if ($FLAG2 eq "t")
+  {$spmdir2=$numdir."/spm2imgs/";
+   mkdir ($spmdir2,0775)};
+if ($FLAG2 eq "a")
+  {$spmdir2=$numdir."/briks/";
+  mkdir ($spmdir2,0775);}
+#
+foreach $line (<seriesfile>) {
+  ($dicomids, $series_num, $image_num, $imagetype) = split('_',$line,4);
+  if ($series_num ne "0099")
+  {
+    $seriesdir = $numdir."/ser";
+    $n = int($series_num);
+    $sdir = sprintf("%s%d",$seriesdir,$n);
+    mkdir ($sdir,0775);
+    $images = "*_".$series_num."_*";
+    $dicom_images=$dicomdir.$images;
+    system "cp $dicom_images $sdir";
+ 
+# convert according to image type flag.  
+
+    system "chmod -R 775 $numdir";
+    print "Dicom images transferred for Series ",$n,".\n";
+    print ("\n");
+    $spmserdir=$spmdir."/ser".$n;
+    $infile=sprintf("%s%d/*",$seriesdir,$n);
+    print ($infile, "\n");
+ # For first data conversion 
+    if ($FLAG eq "s")
+     {system "/usr/local/mricron/dcm2nii -d N -e N -f N -i N -n N -o $spmdir -s N $infile";
+      print ("Files rewritten in SPM5 ANALYZE hdr/img format.\n");
+      print ("\n");}  # close SPM5
+    if ($FLAG eq "t")
+     { mkdir ($spmserdir,0775);
+       system "cp /nfs/secrets/3Tstaff/spm2dcm2nii.ini ~/.dcm2nii/.";
+       system "/usr/local/mricron/dcm2nii -b /nfs/secrets/3Tstaff/spm2dcm2nii.ini -o $spmserdir $infile";
+       print ("Files rewritten in SPM2 ANALYZE hdr/img format.\n");
+       print ("\n");} # close SPM2
+    if ($FLAG eq "n")
+      {system "/usr/local/mricron/dcm2nii -d N -e N -f N -i N -g N -n Y -o $spmdir $infile";
+       print ("Files rewritten in 4D Nifti nii format.\n");
+       print ("\n");} # close Nifti
+    if ($FLAG eq "a")
+      {system "/usr/local/mricron/dcm2nii -d N -e N -f N -i N -g N -n Y -o $spmdir $infile";} # close AFNI loop 1 of 2
+# For second data conversion, if required 
+    if ($FLAG2 eq "s")
+     {system "/usr/local/mricron/dcm2nii -d N -e N -f N -i N -n N -o $spmdir2 -s N $infile";
+      print ("Files rewritten in SPM5 ANALYZE hdr/img format.\n");
+      print ("\n");}  # close SPM5
+    if ($FLAG2 eq "t")
+     {$spmserdir=$spmdir2."/ser".$n;
+       mkdir ($spmserdir,0775);
+       system "cp /nfs/secrets/3Tstaff/spm2dcm2nii.ini ~/.dcm2nii/.";
+       system "/usr/local/mricron/dcm2nii -b /nfs/secrets/3Tstaff/spm2dcm2nii.ini -o $spmserdir $infile";
+       print ("Files rewritten in SPM2 ANALYZE hdr/img format.\n");
+       print ("\n");} # close SPM2
+    if ($FLAG2 eq "n")
+      {system "/usr/local/mricron/dcm2nii -d N -e N -f N -i N -g N -n Y -o $spmdir2 $infile";
+       print ("Files rewritten in 4D Nifti nii format.\n");
+       print ("\n");} # close Nifti
+    if ($FLAG eq "a")
+      {system "/usr/local/mricron/dcm2nii -d N -e N -f N -i N -g N -n Y -o $spmdir2 $infile";} # close AFNI loop 1 of 2
+   } # close 0099 if
+ } # close series loop
+close(seriesfile);
+if (($FLAG or $FLAG2) eq "d")
+{
+  print ("Dicom files moved to user directory. Done!\n");
+}
+if (($FLAG or $FLAG2) eq "a")
+{
+      if ($FLAG eq "a") 
+        {$niifile=$spmdir."/nifti_list";
+         system "ls -1 $spmdir > $niifile";}
+      if ($FLAG2 eq "a") 
+        {$niifile=$spmdir2."/nifti_list";
+         system "ls -1 $spmdir2 > $niifile";}
+
+      open (niifile) or die ("Could not open nifti_list file.");
+      foreach $line (<niifile>)
+      {
+        $cline=chop($line);    # makes the code work - no string recognition without this?
+        ($fname,$fext)=split("\\.",$line,2);
+        if (($line ne "nifti_list") && ($fext ne ".bval") && ($fext ne "bvec"))
+        {
+        if ($FLAG eq "a") 
+          {$niifile=$spmdir.$fname.".".$fext;
+           $brikfile=$spmdir.$fname;}
+        if ($FLAG2 eq "a") 
+          {$niifile=$spmdir2.$fname.".".$fext;
+           $brikfile=$spmdir2.$fname;}
+        system "3dcopy $niifile $brikfile";
+        system "rm -rf $niifile";
+        print ("Files rewritten in AFNI HEAD/BRIK format.\n");
+        print ("\n");
+        }
+      }  # close 3dcopy loop
+} # close AFNI loop 2 of 2
+#
+# change group of output file structure so users can access the data
+system "sudo chgrp -R $group $numdir";
+system "sudo chmod -R 770 $numdir";
+system "sudo chown -R $user $numdir";
+system "rm -rf $file4hdr";
+print ("Done.\n");
+print ("\n");
+  
+
