@@ -1,4 +1,6 @@
-Usage: dcm2dir $ARGV[0] $ARGV[1] $ARGV[2] $ARGV[3] $ARGV[4] $ARGV[5]
+Usage: 
+
+dcm2dir $ARGV[0] $ARGV[1] $ARGV[2] $ARGV[3] $ARGV[4] $ARGV[5]
 
 $DATE_TIME = $ARGV[0]
 $user = $ARGV[1]
@@ -9,6 +11,9 @@ $FLAG2 = $ARGV[5] (Optional)
 
 Flags: d=dicom(default), a=afni, n=nifti, s=4D files for SPM5/SPM8, t=SPM2
 
+-------
+Notes:
+
 It looks like dcm2dir copies from
 
 /nfs/secrets/dicom/$DATE_TIME/ 
@@ -17,4 +22,4 @@ to
 
 /nfs/secrets/3Tusers/$user/$proj/$number
 
-
+It is assumed that final directory has inherited group permissions formatted as: "$user_$proj".  This has been default for system admin.  Otherwise, permissions may not be set appropriately.
